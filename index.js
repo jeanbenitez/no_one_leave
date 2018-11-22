@@ -9,13 +9,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/slack_webhook', async (req, res) => {
+  console.log(req.body);
   const { channel, user, type, challenge } = req.body;
 
   if (type === 'url_verification') {
     return res.status(200).send({ challenge });
   }
-
-  console.log({ channel, channelId, type, user, type });
 
   if (channel === channelId && type === 'member_left_channel') {
     const url = `https://slack.com/api/channels.invite`;
