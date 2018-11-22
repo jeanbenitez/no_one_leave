@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import fetch from 'node-fetch';
 import { channelId, token } from './constants';
-import { makeBody } from './utils'
+import { makeBody } from './utils';
 
 const app = express();
 
