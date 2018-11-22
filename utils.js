@@ -6,7 +6,7 @@
 export const respond = function (payload, statusCode = 200) {
   return {
     statusCode,
-    body: JSON.stringify({ payload })
+    body: JSON.stringify(payload)
   };
 };
 
