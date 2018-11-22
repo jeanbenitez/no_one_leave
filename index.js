@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/slack_webhook', async (req, res) => {
-  console.log(req.body);
+  console.log({ channelId, token });
 
   if (req.body.type === 'url_verification') {
     return res.status(200).send({ challenge: req.body.challenge });
