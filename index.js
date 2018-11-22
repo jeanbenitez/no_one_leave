@@ -1,10 +1,15 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import { channelId, token } from './constants';
 import { makeBody, respond } from './utils'
 
 const app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.post('/slack_webhook', (_, res) => {
+  console.log(res.body);
   const { channel, user, type } = res.body.payload;
 
   if (channel === channelId && type === 'member_left_channel') {
