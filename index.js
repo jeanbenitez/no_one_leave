@@ -15,6 +15,8 @@ app.post('/slack_webhook', async (req, res) => {
     return res.status(200).send({ challenge });
   }
 
+  console.log({ channel, channelId, type, user, type });
+
   if (channel === channelId && type === 'member_left_channel') {
     const url = `https://slack.com/api/channels.invite`;
     const extraHeader = { 'Authorization': 'Bearer ' + token };
