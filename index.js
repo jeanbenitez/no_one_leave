@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/slack_webhook', (req, res) => {
+app.post('/slack_webhook', async (req, res) => {
   const { channel, user, type, challenge } = req.body;
 
   if (type === 'url_verification') {
@@ -18,7 +18,7 @@ app.post('/slack_webhook', (req, res) => {
   if (channel === channelId && type === 'member_left_channel') {
     const url = `https://slack.com/api/channels.invite`;
     const extraHeader = { 'Authorization': 'Bearer ' + token };
-    fetch(url, makeBody({ channel, user }, extraHeader));
+    await fetch(url, makeBody({ channel, user }, extraHeader));
     return res.status(200).send({ msg: 'DONE' });
   }
 
