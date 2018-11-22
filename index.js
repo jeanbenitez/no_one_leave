@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { channelId, token } from './constants';
-import { makeBody, respond } from './utils'
+import { makeBody } from './utils'
 
 const app = express();
 
@@ -12,17 +12,17 @@ app.post('/slack_webhook', (req, res) => {
   const { channel, user, type, challenge } = req.body;
 
   if (type === 'url_verification') {
-    return respond({ challenge });
+    return res.status(400).send({ challenge });
   }
 
   if (channel === channelId && type === 'member_left_channel') {
     const url = `https://slack.com/api/channels.invite`;
     const extraHeader = { 'Authorization': 'Bearer ' + token };
     fetch(url, makeBody({ channel, user }, extraHeader));
-    return respond('DONE');
+    return res.status(400).send({ msg: 'DONE' });
   }
 
-  return respond('NOTHING TO DO...');
+  return res.status(400).send({ msg: 'DONE' });
 });
 
 const PORT = process.env.PORT || 3000;
