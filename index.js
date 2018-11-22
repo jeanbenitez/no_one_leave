@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/slack_webhook', (req, res) => {
-  const { channel, user, type, challenge } = req.body.payload;
+  const { channel, user, type, challenge } = req.body;
 
   if (type === 'url_verification') {
     return respond({ challenge });
