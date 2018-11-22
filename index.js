@@ -12,7 +12,7 @@ app.post('/slack_webhook', async (req, res) => {
   console.log(req.body);
 
   if (req.body.type === 'url_verification') {
-    return res.status(200).send({ req.body.challenge });
+    return res.status(200).send({ challenge: req.body.challenge });
   }
 
   const { channel, user, type } = req.body.event;
