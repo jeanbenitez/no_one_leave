@@ -17,10 +17,7 @@ export const respond = function (payload, statusCode = 200) {
 export const makeBody = function (body, headers) {
   const parsed = {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers
-    },
+    headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
     mode: 'cors',
     cache: 'default',
   };
