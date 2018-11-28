@@ -15,10 +15,7 @@ app.post('/slack_webhook', async (req, res) => {
   }
 
   const { channel, user, type } = req.body.event;
-
   const exclude = excludeUsers.split(',').includes(user);
-
-  console.log({ channelId, token, excludeUsers, user, exclude });
 
   if (channel === channelId && type === 'member_left_channel' && !exclude) {
     await fetch('https://slack.com/api/channels.invite', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
