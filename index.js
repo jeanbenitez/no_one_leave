@@ -16,16 +16,15 @@ app.post('/slack_webhook', async (req, res) => {
 
   const { channel, user, type } = req.body.event;
 
+  const exclude = excludeUsers.split(',').includes(user);
 
-  console.log({ channelId, token, excludeUsers, user });
+  console.log({ channelId, token, excludeUsers, user, exclude });
 
-  const list = excludeUsers.split(',');
-
-  if (channel === channelId && type === 'member_left_channel' && !list.includes(user)) {
+  if (channel === channelId && type === 'member_left_channel' && !exclude) {
     await fetch('https://slack.com/api/channels.invite', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
   }
-  else if (channel === channelId && type === 'member_joined_channel' && list.includes(user)) {
-    
+
+  if (channel === channelId && type === 'member_joined_channel' && exclude) {
     await fetch('https://slack.com/api/channels.kick', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
   }
 
