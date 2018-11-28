@@ -10,18 +10,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/slack_webhook', async (req, res) => {
-  console.log({ channelId, token, excludeUsers });
-
   if (req.body.type === 'url_verification') {
     return res.status(200).send({ challenge: req.body.challenge });
   }
 
   const { channel, user, type } = req.body.event;
 
+
+  console.log({ channelId, token, excludeUsers, user });
+
   if (channel === channelId && type === 'member_left_channel') {
     await fetch('https://slack.com/api/channels.invite', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
   }
   else if (channel === channelId && type === 'member_joined_channel' && excludeUsers.split(',').includes(user)) {
+    
     await fetch('https://slack.com/api/channels.kick', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
   }
 
