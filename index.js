@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import fetch from 'node-fetch';
-import { channelId, token } from './constants';
+import { channelId, token, excludeUsers } from './constants';
 import { makeBody } from './utils';
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/slack_webhook', async (req, res) => {
-  console.log({ channelId, token });
+  console.log({ channelId, token, excludeUsers });
 
   if (req.body.type === 'url_verification') {
     return res.status(200).send({ challenge: req.body.challenge });
@@ -19,10 +19,10 @@ app.post('/slack_webhook', async (req, res) => {
   const { channel, user, type } = req.body.event;
 
   if (channel === channelId && type === 'member_left_channel') {
-    const url = `https://slack.com/api/channels.invite`;
-    const extraHeader = { 'Authorization': 'Bearer ' + token };
-    await fetch(url, makeBody({ channel, user }, extraHeader));
-    return res.status(200).send({ msg: 'DONE' });
+    await fetch('https://slack.com/api/channels.invite', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
+  }
+  else if (channel === channelId && type === 'member_joined_channel' && excludeUsers.includes(user)) {
+    await fetch('https://slack.com/api/channels.kick', makeBody({ channel, user }, { 'Authorization': 'Bearer ' + token }));
   }
 
   return res.status(200).send({ msg: 'DONE' });
